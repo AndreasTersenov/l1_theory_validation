@@ -98,9 +98,13 @@ class TakahashiLoader:
         args1 = (theta, lmax_takahashi, kappa_1024, nside_takahashi)
         args2 = (theta * 2, lmax_takahashi, kappa_1024, nside_takahashi)
 
-        # Parallel smoothing operation
-        with mp.Pool(processes=nprocess) as pool:
-            kappa_smooth1, kappa_smooth2 = pool.map(self.smooth_map, [args1, args2])
+        # # Parallel smoothing operation
+        # with mp.Pool(processes=nprocess) as pool:
+        #     kappa_smooth1, kappa_smooth2 = pool.map(self.smooth_map, [args1, args2])
+        
+        # Non-parallel smoothing operation
+        kappa_smooth1 = self.smooth_map(args1)
+        kappa_smooth2 = self.smooth_map(args2)
 
         print("Smoothing operations done!")
         return np.var(kappa_smooth2 - kappa_smooth1), kappa_smooth1, kappa_smooth2
@@ -118,3 +122,8 @@ class TakahashiLoader:
         print("The theta is:", theta1)
         print("Variance:", var)
         return var, kmap1, kmap2
+    
+    
+    
+    
+    

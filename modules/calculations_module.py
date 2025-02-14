@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.integrate import simps
+from scipy.integrate import simpson
 
 def calculate_moments(x, P):
     """
@@ -12,10 +12,10 @@ def calculate_moments(x, P):
     Returns:
         tuple: Contains mean, variance, skewness, and normalization of the distribution.
     """
-    norm = simps(P, x)
-    mean_x = simps(x * P, x) / norm
-    variance_x = simps(x**2 * P, x) / norm - mean_x**2
-    skewness_x = (simps(x**3 * P, x) / norm - 3 * mean_x * variance_x - mean_x**3) / variance_x**1.5
+    norm = simpson(P, x)
+    mean_x = simpson(x * P, x) / norm
+    variance_x = simpson(x**2 * P, x) / norm - mean_x**2
+    skewness_x = (simpson(x**3 * P, x) / norm - 3 * mean_x * variance_x - mean_x**3) / variance_x**1.5
     return mean_x, variance_x, skewness_x, norm
 
 def get_moments(kappa_values, pdf_values):
