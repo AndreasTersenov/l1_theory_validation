@@ -98,7 +98,7 @@ class CosmoGridLoader:
         
         # For now, we take the mean of n(z) as our source redshift.
         # (Update this if you later have the actual n(z) distribution.)
-        source_z = 0.95  
+        source_z = 0.9416
         print("Assumed source redshift (mean n(z)):", source_z)
         
         return variance, kappa_smooth1, kappa_smooth2
