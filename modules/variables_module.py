@@ -100,6 +100,13 @@ class VariablesGenerator:
         else:
             self.z_array, self.lensing_weight = self.cosmo.get_lensing_weight_array(self.chis, self.chi_source)
         
+        # # KDE version
+        # if self.cosmo.nz_kde is not None:
+        #     self.z_array, self.lensing_weight = self.cosmo.get_lensing_weight_array_kde(self.chis)
+        # else:
+        #     self.z_array, self.lensing_weight = self.cosmo.get_lensing_weight_array(self.chis, self.cosmo.get_chi(self.zs))
+
+        
         print("the source redshift is: ", self.zs)
         print("the chistar is: ", self.chi_source)
         print("the number of planes being used is: ", nplanes)
