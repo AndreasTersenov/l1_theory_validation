@@ -1,7 +1,7 @@
 import numpy as np
 import camb
 from scipy.stats import gaussian_kde
-from scipy.integrate import simpson
+from scipy.integrate import simpson, trapezoid
 import matplotlib.pyplot as plt
 
 def build_nz_kde(nz_file):
@@ -20,7 +20,7 @@ def build_nz_kde(nz_file):
     z = data[:, 0]
     n = data[:, 1]
     # Normalize n(z) using trapezoidal integration.
-    n_norm = n / np.trapz(n, z)
+    n_norm = n / np.trapezoid(n, z)
     kde = gaussian_kde(z, weights=n_norm, bw_method=0.1)
     return kde, np.min(z), np.max(z)
 
@@ -36,6 +36,8 @@ class Cosmology_function:
         ns   = scalar spectral index
         As_ = amplitude (dimensionless, later scaled by 1e-9)
         zs = source redshift if using a single source plane
+        w = dark energy equation of state parameter
+        wa = dark energy equation of state parameter 
         nz_file (optional) = path to txt file containing n(z) for integration
         
         Note:
@@ -44,7 +46,7 @@ class Cosmology_function:
                 - second column: n(z) (can be unnormalized)
 
     """
-    def __init__(self, h, H0, Ob, Oc, mnu, ns, As_, zs, nz_file=None, **kwargs):
+    def __init__(self, h, H0, Ob, Oc, mnu, ns, As_, zs, w, wa, nz_file=None, **kwargs):
         self.h = h  # Assuming H0 is in km/s/Mpc
         self.Ob = Ob
         self.Oc = Oc
@@ -56,6 +58,8 @@ class Cosmology_function:
         self.As_ = As_
         self.As = As_ * 1e-9
         self.Ol = 1.0 - self.Om
+        self.w = w
+        self.wa = wa
         self.H0 = H0
         self.speed_light = 299792.458
         
@@ -90,7 +94,10 @@ class Cosmology_function:
                                omnuh2=self.Omnu * self.h * self.h, 
                                As=self.As, 
                                ns=self.ns,
-                               halofit_version='takahashi'
+                               halofit_version='takahashi',
+                               w=self.w,
+                               wa=self.wa,
+                               dark_energy_model='fluid',
                                )
         
 

@@ -16,6 +16,8 @@ class VariablesGenerator:
         ns (float): Scalar spectral index.
         As (float): Amplitude of the primordial scalar perturbations.
         zs (float): Source redshift.
+        w (float): Dark energy equation of state parameter.
+        wa (float): Time variation of the dark energy equation of state parameter.
         theta1_radian (float): Angular scale in radians converted from arcminutes.
         theta2_radian (float): Twice the angular scale of theta1 in radians.
         speed_light (float): Speed of light in km/s.
@@ -29,7 +31,7 @@ class VariablesGenerator:
             Calculates additional derived quantities based on the cosmological parameters and stores them as attributes.
     """
 
-    def __init__(self, h, H0, Ob, Oc, mnu, ns, As, zs, theta1, nz_file=None, **kwargs):
+    def __init__(self, h, H0, Ob, Oc, mnu, ns, As, zs, w, wa, theta1, nz_file=None, **kwargs):
         """
         Initializes the VariablesGenerator with given parameters, converts angular scales, and computes initial derived variables.
 
@@ -42,6 +44,8 @@ class VariablesGenerator:
             ns (float): Scalar spectral index.
             As (float): Amplitude of the primordial scalar perturbations.
             zs (float): Source redshift.
+            w (float): Dark energy equation of state parameter.
+            wa (float): Time variation of the dark energy equation of state parameter.
             theta1 (float): Angular scale in arcminutes.
             nz_file (str, optional): Path to the n(z) text file.
             **kwargs: Additional keyword arguments passed to the initializer.
@@ -54,6 +58,8 @@ class VariablesGenerator:
         self.ns = ns
         self.As = As
         self.zs = zs 
+        self.w = w
+        self.wa = wa
         self.theta1_radian = (theta1 * u.arcmin).to(u.radian).value  # Convert theta1 from arcmin to radians
         self.theta2_radian = 2. * self.theta1_radian  # Double the angular scale for theta2
         self.nz_file = nz_file # Store nz_file if provided
@@ -82,7 +88,7 @@ class VariablesGenerator:
         
         # Initialize cosmology with given parameters
         # If nz_file is provided, pass it along to Cosmology_function.
-        self.cosmo = Cosmology_function(self.h, self.H0, self.Ob, self.Oc, self.mnu, self.ns, self.As, self.zs, nz_file=nz_file)        
+        self.cosmo = Cosmology_function(self.h, self.H0, self.Ob, self.Oc, self.mnu, self.ns, self.As, self.zs, self.w, self.wa, nz_file=nz_file)        
         
         # Compute comoving distance to source redshift (fallback for single-source case)
         self.chi_source = self.cosmo.get_chi(self.zs)
